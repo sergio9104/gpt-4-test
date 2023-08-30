@@ -1,6 +1,24 @@
+// message continuing the last conversation
+Add validation functionality for all the form fields using validator library, user should not be able to click submit button when at least one field is not valid
+
+//answer
+Certainly, form validation is an essential part of any user-input system. The `validator` library is a popular choice for string validation tasks. Let's integrate it into our Redux-React example.
+
+Firstly, install the `validator` package:
+
+```bash
+npm install validator
+```
+
+Here are the updates you'd need to make:
+
+1. **Update `FormComponent.js` to include validation**
+
+```javascript
+// FormComponent.js
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFirstName, setLastName, setEmail, setMessage } from '../../reducer';
+import { setFirstName, setLastName, setEmail, setMessage } from './formSlice';
 import validator from 'validator';
 
 const FormComponent = () => {
@@ -38,13 +56,13 @@ const FormComponent = () => {
         onChange={(e) => dispatch(setEmail(e.target.value))}
       />
       <textarea 
-        placeholder="Message (at least 10 characters)"
+        placeholder="Message (at least 10 characters)" 
         style={{ borderColor: isValidMessage ? 'green' : 'red' }}
         value={message} 
         onChange={(e) => dispatch(setMessage(e.target.value))}
       />
-      <button
-        disabled={!isFormValid} 
+      <button 
+        disabled={!isFormValid}
         onClick={() => console.log({ firstName, lastName, email, message })}
       >
         Submit
@@ -54,3 +72,14 @@ const FormComponent = () => {
 };
 
 export default FormComponent;
+```
+
+In this updated `FormComponent`, the following changes are noteworthy:
+
+- I've used `validator.isEmail` to validate the email.
+- I've used `validator.isAlpha` to validate that first and last names contain only alphabets.
+- For the message, I've added a simple check that it must contain at least 10 characters.
+- I've added a `disabled` attribute to the Submit button that becomes `true` if any field is invalid.
+- I've used inline styles to visually indicate field validity. You can replace this with your CSS classes.
+
+Now, the Submit button will be disabled unless all fields pass their respective validations. I hope this aligns well with your requirements. Feel free to ask for any more details or clarifications.
