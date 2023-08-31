@@ -1,0 +1,122 @@
+// message continuing the last conversation
+Display a list (could be table) of values in store, in a way that don't affect the current validation code
+//answer
+Displaying the stored values while keeping the validation intact is a common use case. You can use another React component to show the list of stored values, leaving the `FormComponent` untouched.
+
+Let's first update the Redux slice to hold an array of form entries.
+
+**Update `formSlice.js` to include a list of entries**
+
+```javascript
+// formSlice.js
+import { createSlice } from '@reduxjs/toolkit';
+
+export const formSlice = createSlice({
+  name: 'form',
+  initialState: {
+    firstName: '',
+    lastName: '',
+    email: '',
+    message: '',
+    entries: []
+  },
+  reducers: {
+    setFirstName: (state, action) => {
+      state.firstName = action.payload;
+    },
+    setLastName: (state, action) => {
+      state.lastName = action.payload;
+    },
+    setEmail: (state, action) => {
+      state.email = action.payload;
+    },
+    setMessage: (state, action) => {
+      state.message = action.payload;
+    },
+    addEntry: (state) => {
+      const newEntry = {
+        firstName: state.firstName,
+        lastName: state.lastName,
+        email: state.email,
+        message: state.message
+      };
+      state.entries.push(newEntry);
+    }
+  }
+});
+
+export const { setFirstName, setLastName, setEmail, setMessage, addEntry } = formSlice.actions;
+export default formSlice.reducer;
+```
+
+Here, I added an `entries` array in the initial state and a new reducer `addEntry` to add a new entry.
+
+**Update `FormComponent.js` to dispatch `addEntry` when submitting**
+
+Simply add a line in the submit button click handler to dispatch `addEntry`:
+
+```javascript
+// Add this line to the Submit button onClick handler
+dispatch(addEntry());
+```
+
+**Create a new component called `EntriesList.js` to display the list**
+
+```javascript
+// EntriesList.js
+import React from 'react';
+import { useSelector } from 'react-redux';
+
+const EntriesList = () => {
+  const { entries } = useSelector((state) => state.form);
+
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        {entries.map((entry, index) => (
+          <tr key={index}>
+            <td>{entry.firstName}</td>
+            <td>{entry.lastName}</td>
+            <td>{entry.email}</td>
+            <td>{entry.message}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+export default EntriesList;
+```
+
+**Update `App.js` to include `EntriesList`**
+
+```javascript
+// App.js
+import React from 'react';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import FormComponent from './FormComponent';
+import EntriesList from './EntriesList';
+
+function App() {
+  return (
+    <Provider store={store}>
+      <FormComponent />
+      <EntriesList />
+    </Provider>
+  );
+}
+
+export default App;
+```
+
+With these changes, the form entries get displayed in a table below the form, and this doesn't affect the existing validation code. If the submit button is clicked when the form is valid, a new entry gets added to the list.

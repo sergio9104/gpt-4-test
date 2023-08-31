@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFirstName, setLastName, setEmail, setMessage } from '../../reducer';
+import { setFirstName, setLastName, setEmail, setMessage, addEntry } from '../../reducer';
 import validator from 'validator';
 
 const FormComponent = () => {
@@ -45,7 +45,7 @@ const FormComponent = () => {
       />
       <button
         disabled={!isFormValid} 
-        onClick={() => console.log({ firstName, lastName, email, message })}
+        onClick={() => dispatch(addEntry())}
       >
         Submit
       </button>

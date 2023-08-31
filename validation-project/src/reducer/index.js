@@ -1,3 +1,3 @@
-import formSlice, { setFirstName, setLastName, setEmail, setMessage } from "./formSlice";
+import formSlice, { setFirstName, setLastName, setEmail, setMessage, addEntry } from "./formSlice";
 
-export { formSlice, setFirstName, setLastName, setEmail, setMessage };
+export { formSlice, setFirstName, setLastName, setEmail, setMessage, addEntry };

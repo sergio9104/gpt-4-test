@@ -7,7 +7,8 @@ export const formSlice = createSlice({
     firstName: '',
     lastName: '',
     email: '',
-    message: ''
+    message: '',
+    entries: []
   },
   reducers: {
     setFirstName: (state, action) => {
@@ -21,9 +22,18 @@ export const formSlice = createSlice({
     },
     setMessage: (state, action) => {
       state.message = action.payload;
+    },
+    addEntry: (state) => {
+      const newEntry = {
+        firstName: state.firstName,
+        lastName: state.lastName,
+        email: state.email,
+        message: state.message
+      };
+      state.entries.push(newEntry);
     }
   }
 });
 
-export const { setFirstName, setLastName, setEmail, setMessage } = formSlice.actions;
+export const { setFirstName, setLastName, setEmail, setMessage, addEntry } = formSlice.actions;
 export default formSlice.reducer;
